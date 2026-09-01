@@ -59,9 +59,20 @@ public:
 	// マップチップフィールド
 	MapChip* mapChip_;
 	KamataEngine::Model* modelBlock_;
-
 	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
+	
+
+
+
+
+	
 	void GenerateBlocks();
+
+
+
+	
+	
+
 
 
     #pragma endregion

@@ -85,6 +85,8 @@ void Game::Initialize()
 	// マップチップフィールドの初期化
 	mapChip_->LoadMapchipCsv("Resources/blocks.csv");
 	
+
+
 	GenerateBlocks();
 
     #pragma endregion
@@ -137,6 +139,10 @@ void Game::Initialize()
 
 void Game::GenerateBlocks()
 {
+
+
+	#pragma region マップ1
+
 	// 要素数
 	uint32_t numBlockVirtical = mapChip_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChip_->GetNumBlockHorizontal();
@@ -176,6 +182,13 @@ void Game::GenerateBlocks()
 			}
 		}
 	}
+
+	#pragma endregion
+
+
+
+
+
 }
 
 
@@ -368,6 +381,12 @@ void Game::Update()
 
 
 
+
+
+
+
+
+
 	goal_->Update();
 
 
@@ -420,6 +439,12 @@ void Game::Draw()
 			modelBlock_->Draw(*worldTransformBlock, camera_);
 		}
 	}
+
+
+
+
+
+
 
     player_->Draw();
 	
@@ -519,6 +544,8 @@ Game::~Game()
 	#pragma region マップチップの解放
 
 	delete modelBlock_;
+	
+
 	delete mapChip_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_)
 	{
@@ -528,6 +555,11 @@ Game::~Game()
 		}
 	}
 	worldTransformBlocks_.clear();
+
+
+
+
+
 
 	#pragma endregion
 
