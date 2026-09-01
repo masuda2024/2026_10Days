@@ -7,6 +7,19 @@
 #include "Fade.h"
 
 
+
+#pragma region モデル
+
+#include "MapChip.h"
+
+
+#include "Player.h"
+#include"Goal.h"
+#pragma endregion
+
+
+
+
 class Game 
 {
 public:
@@ -39,8 +52,43 @@ public:
 	#pragma endregion
 
 	
-	// エフェクト生成
-	void EffectBorn(KamataEngine::Vector3 position);
+	
+	#pragma region マップチップ
+
+
+	// マップチップフィールド
+	MapChip* mapChip_;
+	KamataEngine::Model* modelBlock_;
+
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
+	void GenerateBlocks();
+
+
+    #pragma endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	
@@ -63,13 +111,29 @@ private:
 	uint32_t textureHandle_ = 0;
 	// カメラ
 	KamataEngine::Camera camera_;
+
+
+
+
+
+
+
 	
+	// 自キャラ
+	Player* player_ = nullptr;
+	KamataEngine::Model* modelPlayer_ = nullptr;
 
 
-	
+	// ゴール
+	Goal* goal_ = nullptr;
+	KamataEngine::Model* modelGoal_ = nullptr;
 
 
-	
+
+
+
+
+
 
 
 

@@ -32,7 +32,9 @@ float EaseInOut(float x1, float x2, float t)
 	return Lerp(x1, x2, easedT);
 }
 
-bool IsCollition(const AABB& aabb1, const AABB& aabb2)
+
+
+bool IsCollition_G(const AABB_G& aabb1, const AABB_G& aabb2) 
 {
 	return (aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) && // x軸
 	       (aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) && // y軸

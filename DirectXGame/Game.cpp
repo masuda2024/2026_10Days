@@ -3,6 +3,14 @@
 #include <ctime>
 #include <cstdlib>
 
+
+
+
+
+
+
+
+
 using namespace KamataEngine;
 using namespace MathUtility;
 
@@ -56,9 +64,6 @@ void Game::Initialize()
 	
     #pragma endregion
 
-	
-
-	
 	#pragma region 効果音
 
 	//効果音ラボ/戦闘[2]/爆発1
@@ -70,13 +75,108 @@ void Game::Initialize()
 	
 	#pragma endregion
 
+
+	#pragma region マップチップ
+	
+	// 3Dモデルの生成
+	modelBlock_ = Model::CreateFromOBJ("block");
+	// マップチップフィールドの生成
+	mapChip_ = new MapChip;
+	// マップチップフィールドの初期化
+	mapChip_->LoadMapchipCsv("Resources/blocks.csv");
+	
+	GenerateBlocks();
+
+    #pragma endregion
+
+
+
+
+
+
+
+
+
+
+
+	#pragma region プレイヤー
+
+	// 3Dモデルデータの生成
+	modelPlayer_ = Model::CreateFromOBJ("Player", true);
+	// 自キャラの生成
+	player_ = new Player();
+	// 座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChip_->GetMapChipPositionByIndex(1, 18);
+	player_->Initialize(modelPlayer_, &camera_, playerPosition);
+	player_->SetMapChip(mapChip_); // 自キャラの生成と初期化
+
+	#pragma endregion
+
+
+	#pragma region ゴール
+
+	// ゴール
+	modelGoal_ = Model::CreateFromOBJ("goal", true);
+	// ゴールの生成
+	goal_ = new Goal();
+	// ゴールの座標
+	Vector3 goalPosition = mapChip_->GetMapChipPositionByIndex(80, 18);
+	goal_->Initialize(modelGoal_, &camera_, goalPosition);
+	goal_->SetMapChip(mapChip_);
+
+    #pragma endregion
+
+
+
+
 	worldTransform_.Initialize();
 	camera_.Initialize();
 }
 
 
 
+void Game::GenerateBlocks()
+{
+	// 要素数
+	uint32_t numBlockVirtical = mapChip_->GetNumBlockVirtical();
+	uint32_t numBlockHorizontal = mapChip_->GetNumBlockHorizontal();
 
+	
+
+	// 要素数を変更する
+	// 列数を設定
+	worldTransformBlocks_.resize(numBlockVirtical);
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) 
+	{
+		// 1列の要素数を設定
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
+	}
+
+
+
+	//Vector3 offset = {-50.0f, -20.0f, 0.0f};
+
+	// キューブの生成
+	for (uint32_t i = 0; i < numBlockVirtical; ++i)
+	{
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) 
+		{
+			if (mapChip_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
+			{
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChip_->GetMapChipPositionByIndex(j, i);
+
+				// CSVの座標
+				//Vector3 position = mapChip_->GetMapChipPositionByIndex(j, i);
+				 // マップ全体を移動
+				//worldTransformBlocks_[i][j]->translation_ = position + offset;
+
+			}
+		}
+	}
+}
 
 
 
@@ -113,6 +213,9 @@ void Game::Update()
 	{
 
 
+		
+		// 自キャラの更新
+		player_->Update();
 
 
 		
@@ -141,17 +244,22 @@ void Game::Update()
 		#pragma endregion
 
 
-
-
-		
-
 		//ESCAPEキーを押してポーズ画面へ移行
 		if (Input::GetInstance()->TriggerKey(DIK_ESCAPE))
 		{
 			phase_ = Phase::kPose;
 		}
 
+		
+	    if (player_->IsDead())
+		{
+			phase_ = Phase::kDeath;
+		}
 
+		if (player_->IsGoal())
+		{
+			phase_ = Phase::kEnemyDeath;
+		}
 
 		break;
 	}
@@ -235,6 +343,36 @@ void Game::Update()
 	}
 	}
 
+
+
+
+
+
+
+
+
+	// ブロックの更新
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) 
+	{
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) 
+		{
+			if (!worldTransformBlock)
+				continue;
+			// アフィン変換行列の作成
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+		}
+	}
+
+
+
+	goal_->Update();
+
+
+
+
 }
 
 
@@ -269,14 +407,26 @@ void Game::Draw()
 	
 	
 	// ここに3Dモデルインスタンスの描画処理を記述する
-	//player_->Draw();
-
-	
 	
 
+	
+	// ブロックの描画
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) 
+	{
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine)
+		{
+			if (!worldTransformBlock)
+				continue;
+			modelBlock_->Draw(*worldTransformBlock, camera_);
+		}
+	}
 
+    player_->Draw();
 	
-	
+	goal_->Draw();
+
+
+
 	Model::PostDraw();
 	
 	#pragma endregion
@@ -330,10 +480,16 @@ void Game::Draw()
 
 void Game::CheckAllCollisions()
 { 
-	
-	
+	AABB_G aabb1, aabb2;
 
+	aabb1 = player_->GetAABB_G();
+	aabb2 = goal_->GetAABB_G();
 
+	if (IsCollition_G(aabb1, aabb2))
+	{
+		player_->OnCollitionGoal(goal_);
+		goal_->OnCollitionGoal(player_);
+	}
 }
 
 
@@ -343,10 +499,6 @@ Game::~Game()
 { 
     delete debugCamera_;
 
-	
-	
-
-	
 	#pragma region UI
 
 	delete ESC_Sprite_;
@@ -364,5 +516,22 @@ Game::~Game()
 
 
 
+	#pragma region マップチップの解放
 
+	delete modelBlock_;
+	delete mapChip_;
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_)
+	{
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine)
+		{
+			delete worldTransformBlock;
+		}
+	}
+	worldTransformBlocks_.clear();
+
+	#pragma endregion
+
+
+	delete player_;
+	delete goal_;
 }

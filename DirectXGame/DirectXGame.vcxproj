@@ -167,9 +167,12 @@
     <ClCompile Include="Clear.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapChip.cpp" />
     <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="Over.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="WorldTransformEx.cpp" />
@@ -277,8 +280,11 @@
     <ClInclude Include="Clear.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Goal.h" />
+    <ClInclude Include="MapChip.h" />
     <ClInclude Include="MyMath.h" />
     <ClInclude Include="Over.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tutorial.h" />
   </ItemGroup>
