@@ -52,7 +52,7 @@ Over* over = nullptr;
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	// エンジンの初期化
-	KamataEngine::Initialize(L"_");
+	KamataEngine::Initialize(L"3068_注意落とし穴!");
 
 	// DirectXCommonインスタンスを取得する
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
