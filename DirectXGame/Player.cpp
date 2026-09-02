@@ -53,7 +53,7 @@ void Player::Update()
 
 	
 
-	if (worldTransform_.translation_.y < -10.0f) 
+	if (worldTransform_.translation_.y < -1.0f) 
 	{
 		isDead_ = true;
 	}

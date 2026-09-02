@@ -7,7 +7,6 @@
 #include "Fade.h"
 
 
-
 #pragma region モデル
 
 #include "MapChip.h"
@@ -55,6 +54,12 @@ public:
 	#pragma endregion
 
 	
+
+
+
+
+
+
 	
 	#pragma region マップチップ
 
@@ -114,9 +119,6 @@ private:
 	uint32_t textureHandle_ = 0;
 	// カメラ
 	KamataEngine::Camera camera_;
-
-
-
 
 
 

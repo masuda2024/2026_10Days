@@ -28,6 +28,7 @@ void Game::Initialize()
 	debugCamera_ = new DebugCamera(1280, 720);
 
 
+
 	#pragma region フェーズ・フェード
 	
 	// フェーズインから開始
@@ -88,17 +89,8 @@ void Game::Initialize()
 	// マップチップフィールドの初期化
 	mapChip_->LoadMapchipCsv("Resources/blocks.csv");
 	
+	GenerateBlocks();
     #pragma endregion
-
-
-
-
-
-    GenerateBlocks();
-
-
-
-
 
 
 	#pragma region プレイヤー
@@ -108,7 +100,7 @@ void Game::Initialize()
 	// 自キャラの生成
 	player_ = new Player();
 	// 座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChip_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChip_->GetMapChipPositionByIndex(5, 18);
 	player_->Initialize(modelPlayer_, &camera_, playerPosition);
 	player_->SetMapChip(mapChip_); // 自キャラの生成と初期化
 
@@ -122,7 +114,7 @@ void Game::Initialize()
 	// ゴールの生成
 	goal_ = new Goal();
 	// ゴールの座標
-	Vector3 goalPosition = mapChip_->GetMapChipPositionByIndex(95, 18);
+	Vector3 goalPosition = mapChip_->GetMapChipPositionByIndex(75, 18);
 	goal_->Initialize(modelGoal_, &camera_, goalPosition);
 	goal_->SetMapChip(mapChip_);
 
@@ -131,8 +123,16 @@ void Game::Initialize()
 
 
 
+
+	
+
+
+
 	worldTransform_.Initialize();
+	
 	camera_.Initialize();
+	camera_.translation_ = {40.0f, 30.0f, -50.0f};
+	camera_.UpdateMatrix();
 }
 
 
@@ -206,8 +206,7 @@ void Game::Update()
 		camera_.UpdateMatrix();
 	}
 	#pragma endregion
-
-
+	
 	if (gameActive) 
 	{
 
@@ -377,7 +376,6 @@ void Game::Update()
 
 
 	goal_->Update();
-
 
 
 
