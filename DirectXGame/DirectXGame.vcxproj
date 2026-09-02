@@ -163,7 +163,6 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AllRound.cpp" />
     <ClCompile Include="Clear.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -276,7 +275,6 @@
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AllRound.h" />
     <ClInclude Include="Clear.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Game.h" />

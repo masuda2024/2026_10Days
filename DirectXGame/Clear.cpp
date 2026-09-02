@@ -8,10 +8,10 @@ using namespace KamataEngine;
 void Clear::Initialize()
 {
 	
-
+	/*
 	Back_H = TextureManager::Load("Scenes/space.png");
 	Back_S = KamataEngine::Sprite::Create(Back_H, {0, 0});
-	
+	*/
 	#pragma region UI
 
 	ClearFontHandle_ = TextureManager::Load("UI/GAME_CLEAR.png");
@@ -144,7 +144,7 @@ Clear::~Clear()
 	//  フェード
 	delete fade_;
 	
-	delete Back_S;
+	//delete Back_S;
 	
 	delete ClearFontSprite_;
 	

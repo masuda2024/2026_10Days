@@ -3,10 +3,11 @@ using namespace KamataEngine;
 
 void Title::Initialize()
 {
-
+	/*
 	Back_H = TextureManager::Load("Scenes/space.png");
 	Back_S = KamataEngine::Sprite::Create(Back_H, {0, 0 });
-	
+	*/
+
 	CreditsHandle_ = TextureManager::Load("Scenes/Credits.png");
 	CreditsSprite_ = KamataEngine::Sprite::Create(CreditsHandle_, {10, 518});
 	
@@ -211,7 +212,7 @@ Title::~Title()
 	//  フェード
 	delete fade_;
 	
-	delete Back_S;
+	//delete Back_S;
 	
 	// タイトルのスプライト
 	delete titleSprite_;

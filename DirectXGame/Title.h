@@ -71,13 +71,17 @@ private:
 
 
 
-	#pragma region UI
+	
 
-
+	/*
 	uint32_t Back_H = 0;
 	KamataEngine::Sprite* Back_S = nullptr;
+    */
 
 
+
+    #pragma region UI
+	
 	uint32_t Finish_ = 0;
 	KamataEngine::Sprite* Finish_S_ = nullptr;
 	
