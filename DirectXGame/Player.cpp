@@ -184,6 +184,13 @@ void Player::CheckMapCollisionUP(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
+
+	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
+	{
+		hit = true;
+	}
+
+
 	////右上点の判定
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
@@ -192,6 +199,12 @@ void Player::CheckMapCollisionUP(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
+
+	if (mapChipType == MapChipType::kConst && buildEnabled_)
+	{
+		hit = true;
+	}
+
 
 	// ブロックにヒット
 	if (hit) 
@@ -239,11 +252,21 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
+	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
+	{
+		hit = true;
+	}
+
+
 	////右下点の判定
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock) 
+	{
+		hit = true;
+	}
+	if (mapChipType == MapChipType::kConst && buildEnabled_)
 	{
 		hit = true;
 	}
@@ -306,6 +329,11 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
+	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
+	{
+		hit = true;
+	}
+
 	////右下点の判定
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
@@ -314,6 +342,12 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
+	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
+	{
+		hit = true;
+	}
+
+
 
 	// ブロックにヒット?
 	if (hit)
@@ -362,11 +396,20 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
+	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
+	{
+		hit = true;
+	}
+
 	////左下点の判定
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex + 1, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock)
+	{
+		hit = true;
+	}
+	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
 	{
 		hit = true;
 	}

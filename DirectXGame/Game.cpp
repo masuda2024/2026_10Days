@@ -29,12 +29,14 @@ void Game::Initialize()
 
 
 	#pragma region フェーズ・フェード
+	
 	// フェーズインから開始
 	phase_ = Phase::kFadeIn;
 	// フェード
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
+    
     #pragma endregion
 
 	#pragma region UI
@@ -59,9 +61,6 @@ void Game::Initialize()
 	PoseUI2_Handle_2 = TextureManager::Load("UI/Pushed_Pose_UI_2.png");
 	PoseUI2_Sprite_2 = KamataEngine::Sprite::Create(PoseUI2_Handle_2, {448, 364});
 	
-
-
-	
     #pragma endregion
 
 	#pragma region 効果音
@@ -80,21 +79,22 @@ void Game::Initialize()
 	
 	// 3Dモデルの生成
 	modelBlock_ = Model::CreateFromOBJ("block");
+	
+	modelConst_ = Model::CreateFromOBJ("block");
+	
+	
 	// マップチップフィールドの生成
 	mapChip_ = new MapChip;
 	// マップチップフィールドの初期化
 	mapChip_->LoadMapchipCsv("Resources/blocks.csv");
 	
-
-
-	GenerateBlocks();
-
     #pragma endregion
 
 
 
 
 
+    GenerateBlocks();
 
 
 
@@ -122,7 +122,7 @@ void Game::Initialize()
 	// ゴールの生成
 	goal_ = new Goal();
 	// ゴールの座標
-	Vector3 goalPosition = mapChip_->GetMapChipPositionByIndex(80, 18);
+	Vector3 goalPosition = mapChip_->GetMapChipPositionByIndex(95, 18);
 	goal_->Initialize(modelGoal_, &camera_, goalPosition);
 	goal_->SetMapChip(mapChip_);
 
@@ -140,56 +140,44 @@ void Game::Initialize()
 void Game::GenerateBlocks()
 {
 
-
-	#pragma region マップ1
-
-	// 要素数
 	uint32_t numBlockVirtical = mapChip_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChip_->GetNumBlockHorizontal();
 
-	
-
-	// 要素数を変更する
-	// 列数を設定
 	worldTransformBlocks_.resize(numBlockVirtical);
-	for (uint32_t i = 0; i < numBlockVirtical; ++i) 
+
+	for (uint32_t i = 0; i < numBlockVirtical; ++i)
 	{
-		// 1列の要素数を設定
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 
-
-
-	//Vector3 offset = {-50.0f, -20.0f, 0.0f};
-
-	// キューブの生成
-	for (uint32_t i = 0; i < numBlockVirtical; ++i)
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) 
 	{
 		for (uint32_t j = 0; j < numBlockHorizontal; ++j) 
 		{
-			if (mapChip_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
+			MapChipType type = mapChip_->GetMapChipTypeByIndex(j, i);
+
+			if (type == MapChipType::kBlock || type == MapChipType::kConst) 
 			{
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
+
 				worldTransformBlocks_[i][j] = worldTransform;
+
 				worldTransformBlocks_[i][j]->translation_ = mapChip_->GetMapChipPositionByIndex(j, i);
-
-				// CSVの座標
-				//Vector3 position = mapChip_->GetMapChipPositionByIndex(j, i);
-				 // マップ全体を移動
-				//worldTransformBlocks_[i][j]->translation_ = position + offset;
-
+				
 			}
+
+
+			
+
+
 		}
 	}
-
-	#pragma endregion
-
-
 
 
 
 }
+
 
 
 
@@ -229,7 +217,7 @@ void Game::Update()
 		
 		// 自キャラの更新
 		player_->Update();
-
+		player_->SetBuildEnabled(Build == 1);
 
 		
 	}
@@ -381,7 +369,10 @@ void Game::Update()
 
 
 
-
+	if (Input::GetInstance()->TriggerKey(DIK_H)) 
+	{
+		Build = true;
+	}
 
 
 
@@ -430,18 +421,31 @@ void Game::Draw()
 
 	
 	// ブロックの描画
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) 
+	for (uint32_t i = 0; i < worldTransformBlocks_.size(); ++i)
 	{
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine)
+		for (uint32_t j = 0; j < worldTransformBlocks_[i].size(); ++j) 
 		{
+			WorldTransform* worldTransformBlock = worldTransformBlocks_[i][j];
+
 			if (!worldTransformBlock)
+			{
 				continue;
-			modelBlock_->Draw(*worldTransformBlock, camera_);
+			}
+
+			MapChipType type = mapChip_->GetMapChipTypeByIndex(j, i);
+
+			if (type == MapChipType::kBlock) 
+			{
+				modelBlock_->Draw(*worldTransformBlock, camera_);
+			} else if (type == MapChipType::kConst && Build == 1)
+			{
+				modelConst_->Draw(*worldTransformBlock, camera_);
+			}
 		}
 	}
 
 
-
+	
 
 
 

@@ -13,6 +13,9 @@
 #include "MapChip.h"
 
 
+
+
+
 #include "Player.h"
 #include"Goal.h"
 #pragma endregion
@@ -56,33 +59,22 @@ public:
 	#pragma region マップチップ
 
 
-	// マップチップフィールド
+	// マップチップフィールド 
 	MapChip* mapChip_;
 	KamataEngine::Model* modelBlock_;
 	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 	
 
-
-
-
-	
-	void GenerateBlocks();
-
-
-
+	KamataEngine::Model* modelConst_;
 	
 	
-
-
 
     #pragma endregion
 
-
-
-
-
-
-
+    void GenerateBlocks();
+	
+	bool Build = false;
+	bool GetBuild() const { return Build; }
 
 
 

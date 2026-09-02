@@ -2,7 +2,12 @@
 #include "KamataEngine.h"
 #include "vector"
 
-enum class MapChipType { kBlank, kBlock };
+enum class MapChipType
+{
+	kBlank,//空白
+	kBlock,//ブロック
+	kConst,//建設
+};
 
 struct MapChipData
 {

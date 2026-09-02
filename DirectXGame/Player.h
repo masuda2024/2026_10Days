@@ -3,22 +3,19 @@
 #include "MyMath.h"
 
 
+
 class Goal;
 class MapChip;
 class Player
 {
 public:
 	
+
+
 	// デスフラグ
 	bool isDead_ = false;
 	// デスフラグのgetter
 	bool IsDead() const { return isDead_; }
-
-
-
-
-
-
 
 
 
@@ -44,7 +41,7 @@ public:
 
 
 
-
+	void SetBuildEnabled(bool enabled) { buildEnabled_ = enabled; }
 
 
 	#pragma region マップチップとの当たり判定
@@ -152,13 +149,6 @@ public:
 
 
 
-
-
-
-
-
-
-
 	// 初期化
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, KamataEngine::Vector3& position);
 
@@ -187,5 +177,8 @@ private:
 
 	
 	
+
+	bool buildEnabled_ = false;
+
 	
 };
