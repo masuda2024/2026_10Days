@@ -82,8 +82,10 @@ void Game::Initialize()
 	modelBlock_ = Model::CreateFromOBJ("block");
 	
 	modelConst_ = Model::CreateFromOBJ("block");
-	
-	
+	modelConst2_ = Model::CreateFromOBJ("block");
+	modelConst3_ = Model::CreateFromOBJ("block");
+	modelConst4_ = Model::CreateFromOBJ("block");
+
 	// マップチップフィールドの生成
 	mapChip_ = new MapChip;
 	// マップチップフィールドの初期化
@@ -105,6 +107,32 @@ void Game::Initialize()
 	player_->SetMapChip(mapChip_); // 自キャラの生成と初期化
 
 	#pragma endregion
+
+
+	#pragma region 箱
+
+	modelBox_ = Model::CreateFromOBJ("box");
+	// 座標をマップチップ番号で指定
+	std::vector<KamataEngine::Vector2> boxTilePositions =
+	{
+	    {16,  17}, // 1つ目
+	    {27,  17}, // 2つ目
+	    {38, 17}, // 3つ目
+	    {55, 17}  // 4つ目
+	};
+	for (const auto& tilePos : boxTilePositions)
+	{
+		Box* box = new Box();
+
+		Vector3 b_pos = mapChip_->GetMapChipPositionByIndex(static_cast<uint32_t>(tilePos.x), static_cast<uint32_t>(tilePos.y));
+
+		box->Initialize(modelBox_, &camera_, b_pos);
+
+		boxes_.push_back(box);
+	}
+	
+
+    #pragma endregion
 
 
 	#pragma region ゴール
@@ -156,7 +184,14 @@ void Game::GenerateBlocks()
 		{
 			MapChipType type = mapChip_->GetMapChipTypeByIndex(j, i);
 
-			if (type == MapChipType::kBlock || type == MapChipType::kConst) 
+			if 
+			(
+				type == MapChipType::kBlock || 
+				type == MapChipType::kConst || 
+				type == MapChipType::kConst2 || 
+				type == MapChipType::kConst3 || 
+				type == MapChipType::kConst4 
+			) 
 			{
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
@@ -166,9 +201,6 @@ void Game::GenerateBlocks()
 				worldTransformBlocks_[i][j]->translation_ = mapChip_->GetMapChipPositionByIndex(j, i);
 				
 			}
-
-
-
 		}
 	}
 
@@ -215,8 +247,32 @@ void Game::Update()
 		// 自キャラの更新
 		player_->Update();
 		player_->SetBuildEnabled(Build == 1);
+		player_->SetBuildEnabled2(Build2 == 1);
+		player_->SetBuildEnabled3(Build3 == 1);
+		player_->SetBuildEnabled4(Build4 == 1);
 
-		
+
+
+		#pragma region 敵の更新
+
+		for (Box* boxes : boxes_)
+		{
+			boxes->Update();
+		}
+
+		boxes_.remove_if
+		([](Box* boxes) {
+			if (boxes->IsB_Used())
+			{
+				delete boxes;
+				return true;
+			}
+			return false;
+		});
+	
+
+        #pragma endregion
+
 	}
 
 	switch (phase_)
@@ -225,23 +281,7 @@ void Game::Update()
 	{
 		CheckAllCollisions();
 
-		#pragma region 仮設コード
 		
-		/**/
-		// ゲームクリア(仮)
-		if (Input::GetInstance()->TriggerKey(DIK_C))
-		{
-		    phase_ = Phase::kEnemyDeath;
-		}
-		// ゲームオーバー(仮)
-		if (Input::GetInstance()->TriggerKey(DIK_O))
-		{
-		    phase_ = Phase::kDeath;
-		}
-		
-		#pragma endregion
-
-
 		//ESCAPEキーを押してポーズ画面へ移行
 		if (Input::GetInstance()->TriggerKey(DIK_ESCAPE))
 		{
@@ -366,13 +406,23 @@ void Game::Update()
 
 
 
-	if (Input::GetInstance()->TriggerKey(DIK_H)) 
+	
+	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 1)
 	{
 		Build = true;
 	}
-
-
-
+	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 2)
+	{
+		Build2 = true;
+	}
+	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 3)
+	{
+		Build3 = true;
+	}
+	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 4)
+	{
+		Build4 = true;
+	}
 
 
 	goal_->Update();
@@ -433,10 +483,26 @@ void Game::Draw()
 			if (type == MapChipType::kBlock) 
 			{
 				modelBlock_->Draw(*worldTransformBlock, camera_);
-			} else if (type == MapChipType::kConst && Build == 1)
+			} else if (type == MapChipType::kConst && Build == 1 )
 			{
 				modelConst_->Draw(*worldTransformBlock, camera_);
-			}
+			} 
+
+			if (type == MapChipType::kConst2 && Build2 == 1)
+			{
+				modelConst_->Draw(*worldTransformBlock, camera_);
+			} 
+
+			if (type == MapChipType::kConst3 && Build3 == 1)
+			{
+				modelConst_->Draw(*worldTransformBlock, camera_);
+			} 
+
+			if (type == MapChipType::kConst4 && Build4 == 1)
+			{
+				modelConst_->Draw(*worldTransformBlock, camera_);
+			} 
+
 		}
 	}
 
@@ -450,7 +516,10 @@ void Game::Draw()
 	
 	goal_->Draw();
 
-
+	for (Box* boxes : boxes_)
+	{
+		boxes->Draw();
+	}
 
 	Model::PostDraw();
 	
@@ -515,6 +584,31 @@ void Game::CheckAllCollisions()
 		player_->OnCollitionGoal(goal_);
 		goal_->OnCollitionGoal(player_);
 	}
+
+
+
+	AABB_B aabb3, aabb4;
+	aabb3 = player_->GetAABB_B();
+	for (Box* boxes : boxes_) 
+	{
+		aabb4 = boxes->GetAABB_B();
+
+		if (IsCollition_B(aabb3, aabb4))
+		{
+			player_->OnCollitionBox(boxes);
+			boxes->OnCollitionBox(player_);
+
+			canUse = true;
+			boxCount++;
+		}else
+		{
+			canUse = false;
+		}
+	}
+
+
+
+
 }
 
 
@@ -566,4 +660,8 @@ Game::~Game()
 
 	delete player_;
 	delete goal_;
+	for (Box* boxes : boxes_)
+	{
+		delete boxes;
+	}
 }

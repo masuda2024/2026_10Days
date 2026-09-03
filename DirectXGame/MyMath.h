@@ -7,8 +7,6 @@ float EaseInOut(float x1, float x2, float t);
 
 
 
-
-
 struct AABB_G
 {
 	KamataEngine::Vector3 min;
@@ -18,16 +16,9 @@ bool IsCollition_G(const AABB_G& aabbG1, const AABB_G& aabbG2);
 
 
 
-
-
-
-
-
-
-struct AABB2
+struct AABB_B
 {
 	KamataEngine::Vector3 min;
 	KamataEngine::Vector3 max;
 };
-
-bool IsCollition2(const AABB2& aabb3, const AABB2& aabb4);
+bool IsCollition_B(const AABB_B& aabb3, const AABB_B& aabb4);

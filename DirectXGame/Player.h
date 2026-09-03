@@ -3,8 +3,8 @@
 #include "MyMath.h"
 
 
-
 class Goal;
+class Box;
 class MapChip;
 class Player
 {
@@ -40,11 +40,33 @@ public:
 	void OnCollitionGoal(const Goal* goal);
 
 
+	//箱
+	// AABB_Bを取得
+	AABB_B GetAABB_B();
+	// ゴールとの衝突応答
+	void OnCollitionBox(const Box* box);
 
-	void SetBuildEnabled(bool enabled) { buildEnabled_ = enabled; }
+
+
 
 
 	#pragma region マップチップとの当たり判定
+
+	bool buildEnabled_ = false;
+	void SetBuildEnabled(bool enabled) { buildEnabled_ = enabled; }
+
+	bool buildEnabled2_ = false;
+	void SetBuildEnabled2(bool enabled) { buildEnabled2_ = enabled; }
+
+	bool buildEnabled3_ = false;
+	void SetBuildEnabled3(bool enabled) { buildEnabled3_ = enabled; }
+
+	bool buildEnabled4_ = false;
+	void SetBuildEnabled4(bool enabled) { buildEnabled4_ = enabled; }
+
+
+
+
 
 	// マップチップによるフィールド
 	MapChip* mapChip_ = nullptr;
@@ -93,14 +115,15 @@ public:
 
 	#pragma region 移動
 	
-	int32_t move = false;
+
+	float randomTimer_ = 0.0f;
+	float randomInterval_ = 0.5f;
+
+
+	bool move = false;
 	
-
-
-
-
 	// 加速度
-	static inline const float kAccleration = 0.1f;
+	static inline const float kAccleration = 0.5f;
 	// 減衰(ブレーキ)
 	static inline const float kAttenuation = 0.5f;
 	// 制限速度
@@ -111,9 +134,9 @@ public:
 	// 最大落下速度(下方向)
 	static inline const float kLimitFallSpeed = 0.8f;
 	// ジャンプ初速(上方向)
-	static inline const float kJumpAcceleration = 0.8f;
+	static inline const float kJumpAcceleration = 0.6f;
 	// 着地時の速度減衰率
-	static inline const float kAttenuationLanding = 0.9f;
+	static inline const float kAttenuationLanding = 1.5f;
 	// 微小な数値
 	static inline const float kGroundSearchHeight = 0.1f;
 	// 着地時の速度減衰率
@@ -174,11 +197,4 @@ private:
 	KamataEngine::Model* model_;
 
 	KamataEngine::Vector3 velocity_ = {};
-
-	
-	
-
-	bool buildEnabled_ = false;
-
-	
 };

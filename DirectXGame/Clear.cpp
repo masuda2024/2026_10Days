@@ -31,8 +31,8 @@ void Clear::Initialize()
 	#pragma endregion
 
 	
-	// Springin ボタン・システム(1)　決定2
-	Botan_ = Audio::GetInstance()->LoadWave("Sounds/sound/Decision2.mp3");
+	// 効果音ラボ/ボタン・システム音[1] 決定ボタンを押す2
+	Botan_ = Audio::GetInstance()->LoadWave("Sounds/sound/PushDecision2.mp3");
 
 	
 

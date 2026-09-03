@@ -13,6 +13,9 @@ namespace
 	    {"0", MapChipType::kBlank},
 	    {"1", MapChipType::kBlock},
         {"2", MapChipType::kConst},
+        {"3", MapChipType::kConst2},
+        {"4", MapChipType::kConst3},
+        {"5", MapChipType::kConst4},
 	};
 }
 

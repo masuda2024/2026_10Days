@@ -3,6 +3,7 @@
 
 
 
+
 #include"cassert"
 #include<numbers>
 #include<algorithm>
@@ -11,6 +12,7 @@
 #include "MapChip.h"
 using namespace KamataEngine;
 using namespace MathUtility;
+
 
 
 
@@ -83,13 +85,10 @@ void Player::Draw()
 void Player::InputMove()
 {
 
+
 	// 移動操作
 	if (onGround_) 
 	{
-
-
-
-		
 		// 加速
 		Vector3 acceleration = {};
 		if (Input::GetInstance()->PushKey(DIK_SPACE))
@@ -99,47 +98,40 @@ void Player::InputMove()
 		if (move) 
 		{
 			acceleration.x += kAccleration;
+		
+			// 加速/減速
+			velocity_ += acceleration;
+			
+			if (Input::GetInstance()->TriggerKey(DIK_SPACE) && move)
+			{
+				velocity_.y = kJumpAcceleration;
+				onGround_ = false;
+			}
 		}
-
-
-		// 加速/減速
-		velocity_ += acceleration;
 		// 最大速度制限
 		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-
-
 	}
 	// 空中
 	else 
 	{
-		// 加速
-		Vector3 acceleration = {};
-		if (Input::GetInstance()->PushKey(DIK_SPACE))
-		{
-			move = true;
-		}
 		if (move)
 		{
+			// 加速
+			Vector3 acceleration = {};
 			acceleration.x += kAccleration;
+
+			// 加速/減速
+			velocity_ += acceleration;
+			
+			
 		}
-
-
-		// 加速/減速
-		velocity_ += acceleration;
 		// 最大速度制限
 		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-
 		// 落下速度
 		velocity_ += Vector3(0, -kGravityAcceleration, 0);
 		// 落下速度制限
 		velocity_.y = max(velocity_.y, -kLimitFallSpeed);
-
-
 	}
-
-
-	
-
 }
 
 #pragma region マップ衝突チェック
@@ -147,13 +139,14 @@ void Player::InputMove()
 // 2.マップ衝突チェック
 void Player::CheckMapCollision(CollisionMapInfo& info)
 {
-	CheckMapCollisionUP(info);
+	//CheckMapCollisionUP(info);
 	CheckMapCollisionDown(info);
-	CheckMapCollisionRight(info);
-	CheckMapCollisionLeft(info);
+	//CheckMapCollisionRight(info);
+	//CheckMapCollisionLeft(info);
 }
 
 // マップ衝突チェック　上
+/*
 void Player::CheckMapCollisionUP(CollisionMapInfo& info)
 {
 	// 上昇あり?
@@ -180,12 +173,14 @@ void Player::CheckMapCollisionUP(CollisionMapInfo& info)
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex + 1);
 	// 隣接セルがともにブロックであればヒット
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock)
-	{
-		hit = true;
-	}
-
-	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
+	if 
+	(
+		mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock || 
+		mapChipType == MapChipType::kConst &&  buildEnabled_ ||
+	    mapChipType == MapChipType::kConst2 &&  buildEnabled2_ ||
+	    mapChipType == MapChipType::kConst3 && buildEnabled3_ ||
+		mapChipType == MapChipType::kConst4 &&  buildEnabled4_
+	)
 	{
 		hit = true;
 	}
@@ -195,12 +190,14 @@ void Player::CheckMapCollisionUP(CollisionMapInfo& info)
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex + 1);
-	if (mapChipType == MapChipType::kBlock) 
-	{
-		hit = true;
-	}
-
-	if (mapChipType == MapChipType::kConst && buildEnabled_)
+	if 
+	(
+		mapChipType == MapChipType::kBlock || 
+		mapChipType == MapChipType::kConst && buildEnabled_|| 
+	    mapChipType == MapChipType::kConst2 && buildEnabled2_ ||
+		mapChipType == MapChipType::kConst3 && buildEnabled3_ || 
+		mapChipType == MapChipType::kConst4 && buildEnabled4_
+	) 
 	{
 		hit = true;
 	}
@@ -221,7 +218,7 @@ void Player::CheckMapCollisionUP(CollisionMapInfo& info)
 		info.ceiling = true;
 	}
 }
-
+*/
 // マップ衝突チェック 下
 void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 {
@@ -248,28 +245,35 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock)
+	if
+	(
+		mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock || 
+		mapChipType == MapChipType::kConst &&  buildEnabled_ || 
+		mapChipType == MapChipType::kConst2 && buildEnabled2_ ||
+	    mapChipType == MapChipType::kConst3 && buildEnabled3_ || 
+		mapChipType == MapChipType::kConst4 && buildEnabled4_
+	)
 	{
 		hit = true;
 	}
-	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
-	{
-		hit = true;
-	}
-
+	
 
 	////右下点の判定
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
-	if (mapChipType == MapChipType::kBlock) 
+	if 
+	(
+		mapChipType == MapChipType::kBlock ||
+		mapChipType == MapChipType::kConst && buildEnabled_ ||
+		mapChipType == MapChipType::kConst2 && buildEnabled2_ || 
+		mapChipType == MapChipType::kConst3 && buildEnabled3_ || 
+		mapChipType == MapChipType::kConst4 && buildEnabled4_
+	) 
 	{
 		hit = true;
 	}
-	if (mapChipType == MapChipType::kConst && buildEnabled_)
-	{
-		hit = true;
-	}
+	
 
 	// ブロックにヒット?
 	if (hit) 
@@ -294,12 +298,16 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 		onGround_ = true;
 		// 着地時にX速度を減衰
 		velocity_.x *= (1.0f - kAttenuationLanding);
+		
+	
+		//velocity_.y = 0.01f;
 		// Y速度をゼロにする
 		velocity_.y = 0.0f;
 	}
 }
 
 // マップ衝突チェック 右
+/*
 void Player::CheckMapCollisionRight(CollisionMapInfo& info)
 {
 	// 右移動あり?
@@ -325,28 +333,35 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info)
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex - 1, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock) 
+	if 
+	(
+		mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock || 
+		mapChipType == MapChipType::kConst &&  buildEnabled_ || 
+		mapChipType == MapChipType::kConst2 && buildEnabled2_ ||
+	    mapChipType == MapChipType::kConst3 && buildEnabled3_ || 
+		mapChipType == MapChipType::kConst4 && buildEnabled4_
+	) 
 	{
 		hit = true;
 	}
-	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
-	{
-		hit = true;
-	}
+	
 
 	////右下点の判定
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex - 1, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock)
+	if 
+	(
+		mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock || 
+		mapChipType == MapChipType::kConst &&  buildEnabled_ || 
+		mapChipType == MapChipType::kConst2 && buildEnabled2_ ||
+	    mapChipType == MapChipType::kConst3 && buildEnabled3_ || 
+		mapChipType == MapChipType::kConst4 && buildEnabled4_
+	)
 	{
 		hit = true;
 	}
-	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
-	{
-		hit = true;
-	}
-
+	
 
 
 	// ブロックにヒット?
@@ -365,8 +380,9 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info)
 		info.hitwall = true;
 	}
 }
-
+*/
 // マップ衝突チェック 左
+/*
 void Player::CheckMapCollisionLeft(CollisionMapInfo& info)
 {
 	// 左移動あり?
@@ -392,27 +408,36 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info)
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex + 1, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock) 
+	if 
+	(
+		mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock || 
+		mapChipType == MapChipType::kConst && buildEnabled_ || 
+		mapChipType == MapChipType::kConst2 && buildEnabled2_ ||
+	    mapChipType == MapChipType::kConst3 && buildEnabled3_ || 
+		mapChipType == MapChipType::kConst4 && buildEnabled4_
+	) 
 	{
 		hit = true;
 	}
-	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
-	{
-		hit = true;
-	}
+	
+
 
 	////左下点の判定
 	indexSet = mapChip_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
 	mapChipType = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	mapChipTypeNext = mapChip_->GetMapChipTypeByIndex(indexSet.xIndex + 1, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock)
+	if 
+	(
+		mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock || 
+		mapChipType == MapChipType::kConst && buildEnabled_ || 
+		mapChipType == MapChipType::kConst2 && buildEnabled2_ ||
+	    mapChipType == MapChipType::kConst3 && buildEnabled3_ || 
+		mapChipType == MapChipType::kConst4 && buildEnabled4_
+	)
 	{
 		hit = true;
 	}
-	if (mapChipType == MapChipType::kConst && mapChipTypeNext != MapChipType::kConst && buildEnabled_)
-	{
-		hit = true;
-	}
+	
 
 	// ブロックにヒット?
 	if (hit) 
@@ -430,6 +455,7 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info)
 		info.hitwall = true;
 	}
 }
+*/
 #pragma endregion
 
 #pragma region マップ衝突後の処理
@@ -523,7 +549,7 @@ void Player::CheckMapLanding(const CollisionMapInfo& info)
 			// 着地状態に切り替える(落下を止める)
 			onGround_ = true;
 			// 着地時にX速度を減衰
-			velocity_.x *= (1.0f - kAttenuationLanding);
+			//velocity_.x *= (1.0f - kAttenuationLanding);
 			// Y速度をゼロにする
 			velocity_.y = 0.0f;
 		}
@@ -584,4 +610,22 @@ void Player::OnCollitionGoal(const Goal* goal)
 	(void)goal;
 	// ゴールフラグを立てる
 	isGoal_ = true;
+}
+
+
+
+AABB_B Player::GetAABB_B() 
+{
+	KamataEngine::Vector3 worldPos = GetWorldPosition();
+
+	AABB_B aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+
+	return aabb;
+}
+void Player::OnCollitionBox(const Box* box)
+{
+	(void)box;
 }

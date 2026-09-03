@@ -16,6 +16,7 @@
 
 
 #include "Player.h"
+#include"Box.h"
 #include"Goal.h"
 #pragma endregion
 
@@ -71,8 +72,9 @@ public:
 	
 
 	KamataEngine::Model* modelConst_;
-	
-	
+	KamataEngine::Model* modelConst2_;
+	KamataEngine::Model* modelConst3_;
+	KamataEngine::Model* modelConst4_;
 
     #pragma endregion
 
@@ -80,6 +82,15 @@ public:
 	
 	bool Build = false;
 	bool GetBuild() const { return Build; }
+
+	bool Build2 = false;
+	bool GetBuild2() const { return Build2; }
+
+	bool Build3 = false;
+	bool GetBuild3() const { return Build3; }
+
+	bool Build4 = false;
+	bool GetBuild4() const { return Build4; }
 
 
 
@@ -128,6 +139,13 @@ private:
 	Player* player_ = nullptr;
 	KamataEngine::Model* modelPlayer_ = nullptr;
 
+
+	//箱
+	Box* box_nullptr = nullptr;
+	std::list<Box*> boxes_;
+	KamataEngine::Model* modelBox_ = nullptr;
+	bool canUse = false;
+	int32_t boxCount = 0;
 
 	// ゴール
 	Goal* goal_ = nullptr;

@@ -41,10 +41,7 @@ bool IsCollition_G(const AABB_G& aabb1, const AABB_G& aabb2)
 	       (aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z);   // z軸
 }
 
-
-
-
-bool IsCollition2(const AABB2& aabb3, const AABB2& aabb4) 
+bool IsCollition_B(const AABB_B& aabb3, const AABB_B& aabb4) 
 {
 	return (aabb3.min.x <= aabb4.max.x && aabb3.max.x >= aabb4.min.x) && // x軸
 	       (aabb3.min.y <= aabb4.max.y && aabb3.max.y >= aabb4.min.y) && // y軸
