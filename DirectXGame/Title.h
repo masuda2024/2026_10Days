@@ -47,6 +47,10 @@ private:
 	KamataEngine::WorldTransform worldTransform_;
 
 
+	
+	uint32_t Back_H = 0;
+	KamataEngine::Sprite* Back_S = nullptr;
+	
 
 
 	uint32_t CreditsHandle_ = 0;
@@ -73,11 +77,7 @@ private:
 
 	
 
-	/*
-	uint32_t Back_H = 0;
-	KamataEngine::Sprite* Back_S = nullptr;
-    */
-
+	
 
 
     #pragma region UI

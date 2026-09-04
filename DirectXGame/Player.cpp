@@ -33,8 +33,8 @@ void Player::Initialize(Model* model, Camera* camera, KamataEngine::Vector3& pos
 	worldTransform_.Initialize();
 
 
-	// Springin/機械・乗り物/近未来動作音2
-	CarH_ = Audio::GetInstance()->LoadWave("Sounds/sound/NearFutureOperationSound2.mp3");
+	// Springin/機械・乗り物[2]/近未来動作音2
+	CarH_ = Audio::GetInstance()->LoadWave("Sounds/sound/Springin/NearFutureOperationSound2.mp3");
 
 }
 

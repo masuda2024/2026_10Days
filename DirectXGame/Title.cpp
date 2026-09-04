@@ -3,17 +3,17 @@ using namespace KamataEngine;
 
 void Title::Initialize()
 {
-	/*
-	Back_H = TextureManager::Load("Scenes/space.png");
+	
+	Back_H = TextureManager::Load("Scenes/Title_Back.png");
 	Back_S = KamataEngine::Sprite::Create(Back_H, {0, 0 });
-	*/
+	
 
 	CreditsHandle_ = TextureManager::Load("Scenes/Credits.png");
 	CreditsSprite_ = KamataEngine::Sprite::Create(CreditsHandle_, {10, 518});
 	
 
 	Title_Text_H_ = TextureManager::Load("Scenes/Title_text.png");
-	Title_Text_S_ = KamataEngine::Sprite::Create(Title_Text_H_, {290, -100});
+	Title_Text_S_ = KamataEngine::Sprite::Create(Title_Text_H_, {290, 100});
 	Title_Text_S_->SetSize({700, 212});
 
 
@@ -55,7 +55,7 @@ void Title::Initialize()
 
 
 	//効果音ラボ/ボタン・システム音[1] 決定ボタンを押す2
-	Botan_ = Audio::GetInstance()->LoadWave("Sounds/sound/PushDecision2.mp3");
+	Botan_ = Audio::GetInstance()->LoadWave("Sounds/sound/Koukaon_Lab/PushDecision2.mp3");
 
 	// カメラの初期化
 	camera_.Initialize();
@@ -73,7 +73,7 @@ void Title::Update()
 
 
 
-
+	/*
 	KamataEngine::Vector2 T_Text_Pos = Title_Text_S_->GetPosition();
 	
 	if (t_texMove)
@@ -86,13 +86,17 @@ void Title::Update()
 	{
 		t_texMove = false;
 	}
-
+*/
 	// タイマーを進める (毎フレーム +1)
 	blinkTimer_++;
 	if (blinkTimer_ >= 60) 
 	{
 		blinkTimer_ = 0;
 	}
+
+
+
+
 
 
 	switch (phase_)
@@ -166,7 +170,7 @@ void Title::Draw()
 
 	Sprite::PreDraw();
 
-	//Back_S->Draw();
+	Back_S->Draw();
 
 	CreditsSprite_->Draw();
 
@@ -212,7 +216,7 @@ Title::~Title()
 	//  フェード
 	delete fade_;
 	
-	//delete Back_S;
+	delete Back_S;
 	
 	// タイトルのスプライト
 	delete titleSprite_;

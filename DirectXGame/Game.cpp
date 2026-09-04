@@ -68,7 +68,7 @@ void Game::Initialize()
 
 	
 	// Springin/機械・乗り物[1]/大型ロボットの駆動音3
-	build_S_ = Audio::GetInstance()->LoadWave("Sounds/sound/LargeRobotOperatingSound3.mp3");
+	build_S_ = Audio::GetInstance()->LoadWave("Sounds/sound/Springin/LargeRobotOperatingSound3.mp3");
 	
 	#pragma endregion
 

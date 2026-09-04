@@ -86,7 +86,7 @@ void Tutorial::Initialize()
 #pragma endregion
 
 	// 効果音ラボ/ボタン・システム音[1] 決定ボタンを押す2
-	Botan_ = Audio::GetInstance()->LoadWave("Sounds/sound/PushDecision2.mp3");
+	Botan_ = Audio::GetInstance()->LoadWave("Sounds/sound/Koukaon_Lab/PushDecision2.mp3");
 
 	// カメラの初期化
 	camera_.Initialize();
