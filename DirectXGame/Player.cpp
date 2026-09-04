@@ -31,6 +31,11 @@ void Player::Initialize(Model* model, Camera* camera, KamataEngine::Vector3& pos
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 	worldTransform_.Initialize();
+
+
+	// Springin/機械・乗り物/近未来動作音2
+	CarH_ = Audio::GetInstance()->LoadWave("Sounds/sound/NearFutureOperationSound2.mp3");
+
 }
 
 void Player::Update() 
@@ -62,6 +67,7 @@ void Player::Update()
 
 
 
+
 	// アフィン変換行列
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	worldTransform_.TransferMatrix(); // プレイヤーの座標の計算
@@ -84,6 +90,14 @@ void Player::Draw()
 // 移動入力
 void Player::InputMove()
 {
+	// エンジン音
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)&& pushC == 0)
+	{
+		pushC = 1;
+		Audio::GetInstance()->PlayWave(CarH_);
+	}
+
+		
 
 
 	// 移動操作
@@ -91,6 +105,9 @@ void Player::InputMove()
 	{
 		// 加速
 		Vector3 acceleration = {};
+
+
+
 		if (Input::GetInstance()->PushKey(DIK_SPACE))
 		{
 			move = true;
@@ -132,6 +149,13 @@ void Player::InputMove()
 		// 落下速度制限
 		velocity_.y = max(velocity_.y, -kLimitFallSpeed);
 	}
+
+
+
+
+	
+
+
 }
 
 #pragma region マップ衝突チェック

@@ -66,12 +66,9 @@ void Game::Initialize()
 
 	#pragma region 効果音
 
-	//効果音ラボ/戦闘[2]/爆発1
-	//explosion_ = Audio::GetInstance()->LoadWave("Sounds/sound/Explosion1.mp3");
-	// 効果音ラボ/戦闘[2]/大爆発1
-	explosion_ = Audio::GetInstance()->LoadWave("Sounds/sound/HugeExplosion2.mp3");
-	// 効果音ラボ/戦闘[2]/大砲1
-	cannon_ = Audio::GetInstance()->LoadWave("Sounds/sound/Cannon1.mp3");
+	
+	// Springin/機械・乗り物[1]/大型ロボットの駆動音3
+	build_S_ = Audio::GetInstance()->LoadWave("Sounds/sound/LargeRobotOperatingSound3.mp3");
 	
 	#pragma endregion
 
@@ -148,11 +145,6 @@ void Game::Initialize()
 
     #pragma endregion
 
-
-
-
-
-	
 
 
 
@@ -409,18 +401,40 @@ void Game::Update()
 	
 	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 1)
 	{
+		if (!buildSoundPlayed1) 
+		{
+			Audio::GetInstance()->PlayWave(build_S_);
+			buildSoundPlayed1 = true;
+		}
+		
 		Build = true;
 	}
 	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 2)
 	{
+		if (!buildSoundPlayed2)
+		{
+			Audio::GetInstance()->PlayWave(build_S_);
+			buildSoundPlayed2 = true;
+		}
 		Build2 = true;
 	}
 	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 3)
 	{
+		if (!buildSoundPlayed3)
+		{
+			Audio::GetInstance()->PlayWave(build_S_);
+			buildSoundPlayed3 = true;
+		}
 		Build3 = true;
 	}
 	if (Input::GetInstance()->IsTriggerMouse(0) && boxCount == 4)
 	{
+		if (!buildSoundPlayed4)
+		{
+			Audio::GetInstance()->PlayWave(build_S_);
+			buildSoundPlayed4 = true;
+		}
+		boxCount = 5;
 		Build4 = true;
 	}
 

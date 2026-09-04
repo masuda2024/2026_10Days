@@ -192,8 +192,11 @@ private:
 
 	#pragma region 効果音
 
-	uint32_t explosion_ = 0;
-	uint32_t cannon_ = 0;
+	uint32_t build_S_ = 0;
+	bool buildSoundPlayed1 = false;
+	bool buildSoundPlayed2 = false;
+	bool buildSoundPlayed3 = false;
+	bool buildSoundPlayed4 = false;
 
 	#pragma endregion
 

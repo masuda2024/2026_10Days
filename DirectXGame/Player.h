@@ -197,4 +197,9 @@ private:
 	KamataEngine::Model* model_;
 
 	KamataEngine::Vector3 velocity_ = {};
+
+
+	//効果音
+	uint32_t CarH_ = 0;
+	int32_t pushC = 0;
 };
